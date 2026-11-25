@@ -1,167 +1,377 @@
 import { useState } from 'react'
+import {
+  HashRouter,
+  NavLink,
+  Routes,
+  Route,
+  Link,
+} from 'react-router-dom'
 
 const projects = [
   {
     number: '01',
     category: 'ENGINEERING · APPLE',
     title: 'Building the systems behind the interface',
-    description: 'Software engineering work across tools and infrastructure. A place to explain the problem, the technical contribution, and what the experience revealed about the people using these systems.',
+    description:
+      'Software engineering work across tools and infrastructure. A place to explain the problem, the technical contribution, and what the experience revealed about the people using these systems.',
     tags: ['Software systems', 'Infrastructure', 'Engineering'],
     type: 'engineering',
-    note: 'Replace this draft with a specific project, your role, and concrete outcomes you can publicly discuss.'
+    note: 'Replace this draft with a specific project, your role, and concrete outcomes you can publicly discuss.',
   },
   {
     number: '02',
     category: 'HCI · CARNEGIE MELLON',
     title: 'Language, learning, and adaptive agents',
-    description: 'A semester of exposure to human-computer interaction research through the Alex Project, exploring how an agent’s language can shape a child’s learning experience.',
+    description:
+      'A semester of exposure to human-computer interaction research through the Alex Project, exploring how an agent’s language can shape a child’s learning experience.',
     tags: ['HCI', 'Language', 'Learning'],
     type: 'research',
-    note: 'Clarify your exact contribution, methods, and what you personally observed. Do not imply authorship or results beyond your role.'
+    note: 'Clarify your exact contribution, methods, and what you personally observed. Do not imply authorship or results beyond your role.',
   },
   {
     number: '03',
     category: 'INDEPENDENT · IN PROGRESS',
     title: 'Questions about agency in algorithmic environments',
-    description: 'An evolving collection of observations and small explorations about how computational systems shape attention, choice, identity, and everyday behavior.',
+    description:
+      'An evolving collection of observations and small explorations about how computational systems shape attention, choice, identity, and everyday behavior.',
     tags: ['Social algorithms', 'Human agency', 'Exploration'],
     type: 'exploration',
-    note: 'Add a real artifact here when you have one: an essay, prototype, interview study, visualization, or annotated reading.'
+    note: 'Add a real artifact here when you have one: an essay, prototype, interview study, visualization, or annotated reading.',
   },
 ]
 
-const notes = [
-  { date: 'QUESTION 01', title: 'When does assistance become substitution?', text: 'Where is the line between a tool that extends our thinking and one that quietly replaces it?' },
-  { date: 'QUESTION 02', title: 'Who gets to shape an algorithmic environment?', text: 'What would meaningful participation look like for the people most affected by automated systems?' },
-  { date: 'QUESTION 03', title: 'How do interfaces teach us to behave?', text: 'The design of a system can make some actions feel natural, difficult, visible, or impossible.' },
-]
-
-function Arrow() {
-  return <span aria-hidden="true" className="arrow">↗</span>
-}
-
 function Header() {
+  const links = [
+    { label: 'Home', to: '/' },
+    { label: 'About', to: '/about' },
+    { label: 'Projects', to: '/projects' },
+    { label: 'CV & Contact', to: '/cv' },
+  ]
+
   const [menuOpen, setMenuOpen] = useState(false)
-  const links = [['About', '#about'], ['Work', '#work'], ['Notes', '#notes'], ['CV', '#contact']]
+
   return (
     <header className="site-header">
-      <a className="wordmark" href="#top" aria-label="Back to top">YOUR NAME<span>®</span></a>
-      <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen}>
-        {menuOpen ? 'CLOSE −' : 'MENU +'}
+      <Link className="wordmark" to="/" onClick={() => setMenuOpen(false)}>
+        CLAIRE CHEN
+      </Link>
+
+      <button
+        className="menu-toggle"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-expanded={menuOpen}
+        aria-label="Toggle navigation"
+      >
+        {menuOpen ? 'CLOSE' : 'MENU'}
       </button>
+
       <nav className={menuOpen ? 'nav open' : 'nav'}>
-        {links.map(([label, href]) => <a key={label} href={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
+        {links.map((link) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            end={link.to === '/'}
+            onClick={() => setMenuOpen(false)}
+          >
+            {link.label}
+          </NavLink>
+        ))}
       </nav>
     </header>
   )
 }
 
-function SectionLabel({ number, children }) {
-  return <div className="section-label"><span>{number}</span><span>{children}</span></div>
+function PageHeading({ eyebrow, title, description }) {
+  return (
+    <div className="page-heading">
+      <div className="eyebrow">{eyebrow}</div>
+      <h1>{title}</h1>
+      {description && <p>{description}</p>}
+    </div>
+  )
+}
+
+function Home() {
+  return (
+    <main className="page-container home-page">
+      <div className="home-status">
+        <span className="status-dot" />
+        ENGINEER / INDEPENDENTLY EXPLORING HCI AND SOCIAL COMPUTING
+      </div>
+
+      <section className="home-intro">
+        <h1>
+          Technology shapes how we understand the world.
+        </h1>
+
+        <p className="home-description">
+          I'm Claire, a software engineer interested in the relationship
+          between computational systems, human behavior, and society.
+          I'm particularly curious about how technology influences what
+          we notice, choose, and understand.
+        </p>
+
+        <div className="home-actions">
+          <Link className="primary-button" to="/about">
+            More about me <span>→</span>
+          </Link>
+          <Link className="secondary-link" to="/projects">
+            Explore my work →
+          </Link>
+        </div>
+      </section>
+
+      <section className="home-lower">
+        <div className="home-block">
+          <div className="eyebrow">BACKGROUND</div>
+          <p>Computer engineering, software engineering, and an introduction to HCI research.</p>
+        </div>
+
+        <div className="home-block">
+          <div className="eyebrow">CURRENT INTERESTS</div>
+          <p>Social algorithms, human agency, interaction design, and technology's effects on society.</p>
+        </div>
+
+        <div className="home-block">
+          <div className="eyebrow">ON THIS SITE</div>
+          <p>Selected projects, research interests, working questions, and professional background.</p>
+        </div>
+      </section>
+
+      <section className="home-feature">
+        <div>
+          <div className="eyebrow">SELECTED WORK</div>
+          <h2>From engineering systems to studying their effects.</h2>
+        </div>
+        <Link to="/projects" className="text-link">
+          View projects →
+        </Link>
+      </section>
+    </main>
+  )
+}
+
+function About() {
+  return (
+    <main className="page-container">
+      <PageHeading
+        eyebrow="01 / ABOUT"
+        title="About me"
+        description="My background, interests, and the questions guiding my next steps."
+      />
+
+      <div className="about-layout">
+        <aside className="about-sidebar">
+          <div className="profile-placeholder">
+            <span>PHOTO</span>
+          </div>
+          <div className="sidebar-detail">
+            <span className="eyebrow">BACKGROUND</span>
+            <p>Computer engineering</p>
+            <p>Software engineering</p>
+          </div>
+          <div className="sidebar-detail">
+            <span className="eyebrow">INTERESTS</span>
+            <p>Human-computer interaction</p>
+            <p>Social computing</p>
+            <p>Algorithmic systems</p>
+          </div>
+        </aside>
+
+        <article className="prose">
+          <h2>Engineering gave me a way to build technology. Research made me curious about what technology builds in us.</h2>
+
+          <p>
+            I studied electrical and computer engineering and went on to work
+            as a software engineer. My professional experience has given me
+            a technical perspective on the systems and infrastructure that
+            make digital products possible.
+          </p>
+
+          <p>
+            Alongside engineering, I became interested in the relationship
+            between technology and human behavior. During my time at Carnegie
+            Mellon, I had an introduction to human-computer interaction
+            research through the Alex Project.
+          </p>
+
+          <p>
+            That experience helped me think about how an interactive agent's
+            language and behavior can influence a learning experience.
+            It also raised broader questions for me about the assumptions
+            embedded in computational systems and the people those systems
+            are designed to serve.
+          </p>
+
+          <h3>What I'm interested in studying</h3>
+
+          <p>
+            I'm interested in understanding how computational systems
+            participate in social life: how they influence attention,
+            behavior, identity, agency, and the ways people relate to one
+            another.
+          </p>
+
+          <p>
+            I want to bring together technical understanding and a
+            human-centered perspective to study these questions more deeply.
+          </p>
+
+          <div className="interest-list">
+            <span>Social algorithms</span>
+            <span>Human agency</span>
+            <span>Human-computer interaction</span>
+            <span>Language and learning</span>
+            <span>Technology and society</span>
+          </div>
+        </article>
+      </div>
+    </main>
+  )
+}
+
+function Projects() {
+  const [filter, setFilter] = useState('all')
+
+  const visibleProjects =
+    filter === 'all'
+      ? projects
+      : projects.filter((project) => project.type === filter)
+
+  const filters = [
+    ['all', 'All'],
+    ['engineering', 'Engineering'],
+    ['research', 'Research'],
+    ['exploration', 'Explorations'],
+  ]
+
+  return (
+    <main className="page-container">
+      <PageHeading
+        eyebrow="02 / PROJECTS"
+        title="Selected work"
+        description="Experiences and explorations that inform the questions I'm asking now."
+      />
+
+      <div className="filters">
+        {filters.map(([value, label]) => (
+          <button
+            key={value}
+            className={filter === value ? 'filter active' : 'filter'}
+            onClick={() => setFilter(value)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="project-list">
+        {visibleProjects.map((project) => (
+          <article className="project-card" key={project.number}>
+            <div className="project-topline">
+              <span>PROJECT {project.number}</span>
+              <span>{project.category}</span>
+            </div>
+
+            <h2>{project.title}</h2>
+            <p className="project-description">{project.description}</p>
+
+            <div className="tags">
+              {project.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+
+            <details className="editing-note">
+              <summary>Portfolio drafting note</summary>
+              <p>{project.note}</p>
+            </details>
+          </article>
+        ))}
+      </div>
+
+      <p className="disclaimer">
+        Project descriptions are starter copy. Revise them to accurately
+        reflect your individual role and contributions.
+      </p>
+    </main>
+  )
+}
+
+function CV() {
+  return (
+    <main className="page-container">
+      <PageHeading
+        eyebrow="04 / CV & CONTACT"
+        title="Background and contact"
+        description="Professional experience, education, and ways to get in touch."
+      />
+
+      <section className="cv-section">
+        <div className="cv-section-heading">
+          <h2>Curriculum vitae</h2>
+          <a className="primary-button" href="/cv.pdf" target="_blank" rel="noreferrer">
+            View CV <span>↗</span>
+          </a>
+        </div>
+
+        <p>
+          My CV includes my education, professional experience, technical
+          background, and research experience.
+        </p>
+
+        <p className="cv-note">
+          Add your current CV as <code>public/cv.pdf</code> in your project.
+        </p>
+      </section>
+
+      <section className="cv-section">
+        <h2>Elsewhere</h2>
+        <div className="contact-list">
+          <a href="mailto:YOUR_EMAIL@example.com">
+            <span>Email</span>
+            <span>YOUR_EMAIL@example.com ↗</span>
+          </a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
+            <span>LinkedIn</span>
+            <span>Professional profile ↗</span>
+          </a>
+          <a href="https://github.com/cokeity" target="_blank" rel="noreferrer">
+            <span>GitHub</span>
+            <span>cokeity ↗</span>
+          </a>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <span>© 2026 CLAIRE CHEN</span>
+      <span>PERSONAL WEBSITE</span>
+      <a href="#/">BACK TO HOME ↑</a>
+    </footer>
+  )
 }
 
 function App() {
-  const [filter, setFilter] = useState('all')
-  const visibleProjects = filter === 'all' ? projects : projects.filter(p => p.type === filter)
-
   return (
-    <>
-      <Header />
-      <main id="top">
-        <section className="hero page-wrap">
-          <div className="hero-kicker"><span className="dot" /> ENGINEER · CURIOUS OBSERVER · ASPIRING RESEARCHER</div>
-          <h1>Understanding the systems that shape <em>how we live.</em></h1>
-          <div className="hero-bottom">
-            <p className="hero-intro">I’m interested in the relationship between technology, human behavior, and society — especially the ways computational systems influence what we notice, choose, and understand.</p>
-            <a className="text-link" href="#about">A LITTLE ABOUT ME <Arrow /></a>
-          </div>
-          <div className="hero-index"><span>PORTFOLIO / 2026</span><span>BASED IN THE UNITED STATES</span></div>
-        </section>
+    <HashRouter>
+      <div className="app-shell">
+        <Header />
 
-        <section id="about" className="about-section page-wrap section-pad">
-          <SectionLabel number="01">ABOUT</SectionLabel>
-          <div className="about-grid">
-            <div className="portrait-placeholder">
-              <div className="portrait-mark">A<br/>PORTRAIT<br/>GOES HERE</div>
-              <span className="image-caption">IMAGE / OPTIONAL</span>
-            </div>
-            <div className="about-copy">
-              <p className="lede">I came to software through computer engineering. Over time, I became just as interested in the questions around the technology as in the technology itself.</p>
-              <p>My experience spans software engineering and an introduction to human-computer interaction research. I’m now interested in studying how algorithmic systems participate in social life — and how we might design, understand, and govern them more thoughtfully.</p>
-              <p>This site is a working collection of projects, questions, and ideas. It will evolve as my interests do.</p>
-              <div className="about-meta">
-                <div><span className="meta-label">BACKGROUND</span><strong>Computer engineering · Software</strong></div>
-                <div><span className="meta-label">CURRENT CURIOSITIES</span><strong>Human agency · Social algorithms · HCI</strong></div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/cv" element={<CV />} />
+        </Routes>
 
-        <section id="work" className="work-section section-pad">
-          <div className="page-wrap">
-            <SectionLabel number="02">SELECTED WORK</SectionLabel>
-            <div className="section-heading-row">
-              <h2>Things I’ve worked on<span className="asterisk">*</span></h2>
-              <p>A few experiences that inform the questions I’m asking now.</p>
-            </div>
-            <div className="filters" aria-label="Filter projects">
-              {[['all','ALL'], ['engineering','ENGINEERING'], ['research','RESEARCH'], ['exploration','EXPLORATIONS']].map(([value,label]) =>
-                <button key={value} className={filter === value ? 'filter active' : 'filter'} onClick={() => setFilter(value)}>{label}</button>
-              )}
-            </div>
-            <div className="project-list">
-              {visibleProjects.map(project => (
-                <article className="project" key={project.number}>
-                  <div className="project-number">{project.number}</div>
-                  <div className="project-main">
-                    <div className="project-category">{project.category}</div>
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <div className="tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-                    <details className="editing-note"><summary>Portfolio drafting note</summary><p>{project.note}</p></details>
-                  </div>
-                  <div className="project-symbol" aria-hidden="true">{project.number === '01' ? '↗' : project.number === '02' ? '◌' : '✳'}</div>
-                </article>
-              ))}
-            </div>
-            <p className="footnote">* Project descriptions are starter copy. Edit them to accurately reflect your role and work.</p>
-          </div>
-        </section>
-
-        <section id="notes" className="notes-section page-wrap section-pad">
-          <SectionLabel number="03">NOTES & QUESTIONS</SectionLabel>
-          <div className="section-heading-row">
-            <h2>Ideas I keep<br/><em>coming back to.</em></h2>
-            <p>Not conclusions — starting points for inquiry.</p>
-          </div>
-          <div className="notes-grid">
-            {notes.map((note, i) => (
-              <article className="note-card" key={note.date}>
-                <span>{note.date}</span>
-                <div className="note-index">0{i + 1}</div>
-                <h3>{note.title}</h3>
-                <p>{note.text}</p>
-              </article>
-            ))}
-          </div>
-          <p className="notes-instruction">Replace these prompts with short essays, reading notes, experiments, or observations as you develop them.</p>
-        </section>
-
-        <section id="contact" className="contact-section">
-          <div className="page-wrap contact-inner">
-            <SectionLabel number="04">ELSEWHERE</SectionLabel>
-            <h2>Let’s keep<br/><em>the conversation going.</em></h2>
-            <p>For research, collaboration, or just a good question.</p>
-            <div className="contact-links">
-              <a href="mailto:YOUR_EMAIL@example.com">EMAIL <Arrow /></a>
-              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LINKEDIN <Arrow /></a>
-              <a href="/cv.pdf">CV <Arrow /></a>
-            </div>
-            <footer><span>© 2026 YOUR NAME</span><a href="#top">BACK TO TOP ↑</a><span>BUILT WITH CURIOSITY</span></footer>
-          </div>
-        </section>
-      </main>
-    </>
+        <Footer />
+      </div>
+    </HashRouter>
   )
 }
 
